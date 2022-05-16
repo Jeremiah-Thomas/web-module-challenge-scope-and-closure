@@ -30,11 +30,12 @@ console.log('example task:', processFirstItem(['foo','bar'],function(str){return
   Study the code for counter1 and counter2, then answer the questions below.
   
   1. What is the difference between counter1 and counter2?
-  
+      counter1 can have multiple counters exist and be different at the same time, counter2 cannot
   2. Which of the two uses a closure? How can you tell?
-  
+      counter1 uses a closure, it has a function inside of a function, the counter variable is not accessible outside of the counterMaker function
   3. In what scenario would the counter1 code be preferable? In what scenario would 
      counter2 be better?  
+      counter1 would be preferable if you needed multiple counters to work independently of each other at the same time. counter2 would be preferable if only one counter was needed
 */
 
 // counter1 code
@@ -65,7 +66,7 @@ NOTE: This will be a callback function for the tasks below
 */
 
 function inning(/*Code Here*/){
-    /*Code Here*/
+   return Math.round(Math.random() * (2 - 0) + 0);
 }
 
 
@@ -83,8 +84,18 @@ Use the finalScore function below to do the following:
 }
 */ 
 
-function finalScore(/*Code Here*/){
-  /*Code Here*/
+function finalScore(cb, num){
+  let home = 0;
+  let away = 0;
+  for (let i = 0; i < num; i++){
+    home += cb();
+    away += cb();
+  }
+
+  return {
+    "Home": home,
+    "Away": away
+  }
 }
 
 
@@ -101,8 +112,11 @@ For example: invoking getInningScore(inning) might return this object:
   */
 
 
-function getInningScore(/*Your Code Here */) {
-  /*Your Code Here */
+function getInningScore(cb) {
+  return {
+    "Home": cb(),
+    "Away": cb()
+  }
 
 }
 
@@ -147,9 +161,28 @@ Use the scoreboard function below to do the following:
   "This game will require extra innings: Away 10 - Home 10"
 ] */
 // NOTE: There is no test associated with this code; if your output matches the given example, consider it complete!
-function scoreboard(/* CODE HERE */) {
-  /* CODE HERE */
+function scoreboard(score, inning, num) {
+  let arr = [];
+  let homeFinal = 0;
+  let awayFinal = 0;
+  let inningResult;
+  for (let i = 1; i <= num; i++){
+    inningResult = score(inning);
+    homeFinal += inningResult.Home;
+    awayFinal += inningResult.Away;
+    arr.push(`Inning ${i}: Away ${inningResult.Away} - Home ${inningResult.Home}`)
+  }
+  if (homeFinal === awayFinal){
+    arr.push(`This game will require extra innings: Away ${awayFinal} - Home ${homeFinal}`)
+  } else {
+    arr.push(`Final Score: Away ${awayFinal} - Home ${homeFinal}`)
+  }
+
+  return arr
+
 }
+
+console.log(scoreboard(getInningScore, inning, 9))
 
 
 
